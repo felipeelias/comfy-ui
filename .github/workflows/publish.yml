@@ -35,6 +35,14 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Extract versions
+        id: versions
+        run: |
+          COMFYUI_VERSION=$(yq '.comfyui' versions.yml)
+          COMFYUI_MANAGER_VERSION=$(yq '.comfyui-manager' versions.yml)
+          echo "comfyui=${COMFYUI_VERSION}" >> $GITHUB_OUTPUT
+          echo "comfyui-manager=${COMFYUI_MANAGER_VERSION}" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v6
@@ -43,6 +51,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            COMFYUI_VERSION=${{ steps.versions.outputs.comfyui }}
+            COMFYUI_MANAGER_VERSION=${{ steps.versions.outputs.comfyui-manager }}
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2

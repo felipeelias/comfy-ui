@@ -1,7 +1,7 @@
 FROM python:3.13-slim-bookworm
 
-ARG COMFYUI_VERSION=v0.3.14
-ARG COMFYUI_MANAGER_VERSION=3.17.11
+ARG COMFYUI_VERSION
+ARG COMFYUI_MANAGER_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -20,10 +20,10 @@ RUN apt update -qq && \
 RUN pip install --upgrade pip
 RUN pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu126
 
-RUN wget https://github.com/comfyanonymous/ComfyUI/archive/refs/tags/${COMFYUI_VERSION}.zip -O comfyui.zip && \
+RUN wget https://github.com/comfyanonymous/ComfyUI/archive/refs/tags/v${COMFYUI_VERSION}.zip -O comfyui.zip && \
   unzip comfyui.zip && \
-  mv ComfyUI-${COMFYUI_VERSION#v}/* . && \
-  rm -rf ComfyUI-${COMFYUI_VERSION#v} comfyui.zip
+  mv ComfyUI-${COMFYUI_VERSION}/* . && \
+  rm -rf ComfyUI-${COMFYUI_VERSION} comfyui.zip
 
 RUN wget https://github.com/ltdrdata/ComfyUI-Manager/archive/refs/tags/${COMFYUI_MANAGER_VERSION}.zip -O manager.zip && \
   unzip manager.zip -d /app/custom_nodes && \

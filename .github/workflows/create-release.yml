@@ -1,0 +1,38 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'versions.yml'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract versions
+        id: versions
+        run: |
+          COMFYUI_VERSION=$(yq '.comfyui' versions.yml)
+          COMFYUI_MANAGER_VERSION=$(yq '.comfyui-manager' versions.yml)
+          echo "comfyui=${COMFYUI_VERSION}" >> $GITHUB_OUTPUT
+          echo "comfyui-manager=${COMFYUI_MANAGER_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        run: |
+          gh release create "comfyui-${COMFYUI_VERSION}-comfyui-manager-${COMFYUI_MANAGER_VERSION}" \
+            --title "ComfyUI ${COMFYUI_VERSION} with ComfyUI-Manager ${COMFYUI_MANAGER_VERSION}" \
+            --notes "## Versions
+
+            - ComfyUI: ${COMFYUI_VERSION}
+            - ComfyUI-Manager: ${COMFYUI_MANAGER_VERSION}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMFYUI_VERSION: ${{ steps.versions.outputs.comfyui }}
+          COMFYUI_MANAGER_VERSION: ${{ steps.versions.outputs.comfyui-manager }}
