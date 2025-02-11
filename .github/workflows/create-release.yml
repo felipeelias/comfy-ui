@@ -28,6 +28,9 @@ jobs:
         run: |
           gh release create "comfyui-${COMFYUI_VERSION}-comfyui-manager-${COMFYUI_MANAGER_VERSION}" \
             --title "ComfyUI ${COMFYUI_VERSION} with ComfyUI-Manager ${COMFYUI_MANAGER_VERSION}" \
+            --prerelease=false \
+            --draft=false \
+            --generate-notes \
             --notes "## Versions
 
             - ComfyUI: ${COMFYUI_VERSION}
