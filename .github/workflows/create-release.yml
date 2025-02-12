@@ -37,6 +37,6 @@ jobs:
             - ComfyUI: ${COMFYUI_VERSION}
             - ComfyUI-Manager: ${COMFYUI_MANAGER_VERSION}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           COMFYUI_VERSION: ${{ steps.versions.outputs.comfyui }}
           COMFYUI_MANAGER_VERSION: ${{ steps.versions.outputs.comfyui-manager }}
